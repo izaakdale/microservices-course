@@ -73,7 +73,9 @@ func (app *Config) authenticate(w http.ResponseWriter, a AuthPayload) {
 		app.errorJSON(w, errors.New("Invalid Credentials"))
 		return
 	} else if response.StatusCode != http.StatusAccepted {
+		log.Printf("status %d\n", response.StatusCode)
 		app.errorJSON(w, errors.New("Error calling auth service"))
+		return
 	}
 
 	// create variable to read response body
@@ -88,7 +90,9 @@ func (app *Config) authenticate(w http.ResponseWriter, a AuthPayload) {
 
 	if jsonFromService.Error {
 		log.Printf("error came from service\n")
+		log.Printf("error: %v\n", err)
 		app.errorJSON(w, err, http.StatusUnauthorized)
+		return
 	}
 
 	var payload jsonResponse
