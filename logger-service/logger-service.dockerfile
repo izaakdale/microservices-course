@@ -3,6 +3,6 @@ FROM alpine:latest
 
 RUN mkdir /app
 # requires a built binary
-COPY brokerApp /app
+COPY loggerApp /app
 
-CMD ["/app/brokerApp"]
+CMD ["/app/loggerApp"]

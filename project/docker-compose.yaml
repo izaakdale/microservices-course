@@ -17,12 +17,21 @@ services:
       dockerfile: ./../authentication-service/authentication-service.dockerfile
     restart: always
     ports: 
-      - "8081:80"
+      - "8091:80"
     deploy:
       mode: replicated
       replicas: 1
     environment: 
       DSN: "host=postgres port=5432 user=postgres password=password dbname=users sslmode=disable timezone=UTC connect_timeout=5"
+
+  logger-service:
+    build:
+      context: ./../logger-service
+      dockerfile: ./../logger-service/logger-service.dockerfile
+    restart: always
+    deploy:
+      mode: replicated
+      replicas: 1
     
   postgres:
     image: postgres:14.2
@@ -39,7 +48,20 @@ services:
     volumes:
       - 'microservice-course-posgresql:/var/lib/postgresql/data'
 
+  mongo:
+    image: mongo:4.2.17-bionic
+    ports:
+      - 27017:27017
+    environment:
+      MONGO_INITDB_DATABASE: logs
+      MONGO_INITDB_ROOT_USERNAME: admin
+      MONGO_INITDB_ROOT_PASSWORD: password
+    volumes:
+      - 'microservice-course-mongo:/data/db'
+
 
 volumes:
     microservice-course-posgresql:
+        driver: local
+    microservice-course-mongo:
         driver: local
